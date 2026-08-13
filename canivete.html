@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Canivete — Planejador Financeiro</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#6b7280;--line:#e5e9f0;--primary:#2563eb;--primary2:#1d4ed8;--green:#16a34a;--red:#dc2626;--shadow:0 10px 30px rgba(25,40,70,.08)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--ink)}
+header{background:#111827;color:#fff;padding:18px 24px;position:sticky;top:0;z-index:5;box-shadow:0 4px 18px #0002}.nav{max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between}.brand{font-weight:800;font-size:21px;letter-spacing:-.5px}.brand span{color:#60a5fa}.tag{font-size:13px;color:#cbd5e1}
+main{max-width:1180px;margin:34px auto;padding:0 18px}.hero{margin-bottom:25px}.hero h1{font-size:34px;margin:0 0 7px;letter-spacing:-1px}.hero p{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:20px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)}.card h2,.card h3{margin:0 0 16px}.income{display:flex;gap:12px;align-items:end}.field{flex:1}.field label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:7px}.field input,.field select{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:11px;font-size:16px;outline:none;background:#fff}.field input:focus{border-color:#93c5fd;box-shadow:0 0 0 3px #2563eb14}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.metric{padding:16px;border-radius:14px;background:#f8fafc}.metric small{display:block;color:var(--muted);margin-bottom:7px}.metric strong{font-size:21px}.green{color:var(--green)}.red{color:var(--red)}
+.expenses{margin-top:20px}.expense{display:grid;grid-template-columns:1fr 150px 42px;gap:9px;align-items:center;margin-bottom:9px}.expense input{width:100%;padding:10px;border:1px solid var(--line);border-radius:9px}.remove{border:0;background:#fee2e2;color:#b91c1c;border-radius:9px;height:40px;cursor:pointer;font-size:18px}.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:700;cursor:pointer}.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary2)}.btn-light{background:#eef2ff;color:#1d4ed8;margin-top:5px}
+.projections{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.projection{border:1px solid var(--line);border-radius:13px;padding:14px}.projection b{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}.projection strong{font-size:18px}
+.goal{margin-top:20px}.goal-list{display:grid;gap:11px}.goal-item{border:1px solid var(--line);border-radius:13px;padding:14px}.goal-top{display:flex;justify-content:space-between;gap:10px}.progress{height:8px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:10px 0}.progress i{display:block;height:100%;background:var(--primary);border-radius:99px}.goal-actions{display:flex;gap:8px}.goal-actions button{margin-top:4px}.empty{color:var(--muted);font-size:14px}
+.addgoal{display:grid;grid-template-columns:1.2fr .8fr .8fr auto;gap:8px;margin-bottom:15px}.addgoal input{padding:11px;border:1px solid var(--line);border-radius:9px}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.summary{grid-template-columns:1fr}.projections{grid-template-columns:repeat(2,1fr)}.addgoal{grid-template-columns:1fr 1fr}.income{flex-direction:column;align-items:stretch}.tag{display:none}}
+@media(max-width:520px){main{margin:22px auto}.hero h1{font-size:28px}.projections{grid-template-columns:1fr 1fr}.expense{grid-template-columns:1fr 105px 40px}.addgoal{grid-template-columns:1fr}.card{padding:17px}}
+</style>
+</head>
+<body>
+<header><div class="nav"><div class="brand">🔧 <span>Canivete</span></div><div class="tag">Ferramentas úteis em um só lugar</div></div></header>
+<main>
+<section class="hero"><h1>Planejador Financeiro</h1><p>Descubra quanto sobra hoje e quanto você pode acumular no futuro.</p></section>
+<div class="grid">
+<section class="card">
+<h2>Seu dinheiro</h2>
+<div class="income"><div class="field"><label>RENDA MENSAL</label><input id="income" type="number" min="0" step="0.01" value="5000"></div><div class="field"><label>QUANTO QUER GUARDAR / MÊS</label><input id="save" type="number" min="0" step="0.01" value="500"></div></div>
+<div class="summary"><div class="metric"><small>Renda</small><strong id="mIncome">R$ 0,00</strong></div><div class="metric"><small>Gastos</small><strong id="mExpense">R$ 0,00</strong></div><div class="metric"><small>Sobra líquida</small><strong class="green" id="mLeft">R$ 0,00</strong></div></div>
+<div class="expenses"><h3>Gastos mensais</h3><div id="expenseList"></div><button class="btn btn-light" onclick="addExpense()">+ Adicionar gasto</button></div>
+</section>
+<section class="card"><h2>Projeção</h2><p style="color:var(--muted);font-size:14px">Sem considerar rendimentos de investimentos.</p><div class="projections"><div class="projection"><b>6 MESES</b><strong id="p6">R$ 0</strong></div><div class="projection"><b>12 MESES</b><strong id="p12">R$ 0</strong></div><div class="projection"><b>3 ANOS</b><strong id="p36">R$ 0</strong></div><div class="projection"><b>5 ANOS</b><strong id="p60">R$ 0</strong></div></div><div class="goal"><h3>Metas financeiras</h3><div class="addgoal"><input id="gname" placeholder="Ex.: Comprar carro"><input id="gvalue" type="number" placeholder="Valor da meta"><input id="gsaved" type="number" placeholder="Já tenho"><button class="btn btn-primary" onclick="addGoal()">Adicionar</button></div><div id="goalList" class="goal-list"></div></div></section>
+</div>
+</main>
+<script>
+const defaults=[['Moradia',1200],['Alimentação',700],['Transporte',400],['Energia elétrica',180],['Água',80],['Internet',100],['Telefone',60],['Saúde',150],['Lazer',250]];
+let expenses=JSON.parse(localStorage.getItem('canivete_expenses')||'null')||defaults.map(x=>({name:x[0],value:x[1]}));
+let goals=JSON.parse(localStorage.getItem('canivete_goals')||'[]');
+const money=v=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v||0);
+function renderExpenses(){const el=document.getElementById('expenseList');el.innerHTML='';expenses.forEach((e,i)=>{const row=document.createElement('div');row.className='expense';row.innerHTML=`<input value="${e.name}" oninput="expenses[${i}].name=this.value;save()"><input type="number" min="0" step=".01" value="${e.value}" oninput="expenses[${i}].value=+this.value;save()"><button class="remove" onclick="expenses.splice(${i},1);save()">×</button>`;el.appendChild(row)});calc()}
+function addExpense(){expenses.push({name:'Novo gasto',value:0});save();renderExpenses()}
+function calc(){const income=+document.getElementById('income').value||0;const saveWanted=+document.getElementById('save').value||0;const total=expenses.reduce((s,e)=>s+(+e.value||0),0);const left=income-total;document.getElementById('mIncome').textContent=money(income);document.getElementById('mExpense').textContent=money(total);document.getElementById('mLeft').textContent=money(left);[6,12,36,60].forEach(m=>document.getElementById('p'+m).textContent=money(Math.max(0,Math.min(left,saveWanted||left))*m));renderGoals()}
+function save(){localStorage.setItem('canivete_expenses',JSON.stringify(expenses));calc()}
+function addGoal(){const name=document.getElementById('gname').value.trim();const value=+document.getElementById('gvalue').value||0;const saved=+document.getElementById('gsaved').value||0;if(!name||value<=0)return alert('Informe o nome e o valor da meta.');goals.push({name,value,saved});localStorage.setItem('canivete_goals',JSON.stringify(goals));document.getElementById('gname').value='';document.getElementById('gvalue').value='';document.getElementById('gsaved').value='';renderGoals()}
+function renderGoals(){const el=document.getElementById('goalList');if(!goals.length){el.innerHTML='<div class="empty">Ainda não há metas. Adicione uma acima.</div>';return}const saveMonth=+document.getElementById('save').value||0;el.innerHTML=goals.map((g,i)=>{const pct=Math.min(100,g.saved/g.value*100);const missing=Math.max(0,g.value-g.saved);const months=saveMonth>0?Math.ceil(missing/saveMonth):null;return `<div class="goal-item"><div class="goal-top"><strong>${g.name}</strong><span>${money(g.saved)} / ${money(g.value)}</span></div><div class="progress"><i style="width:${pct}%"></i></div><small style="color:var(--muted)">${pct.toFixed(0)}% concluído · ${months?`aprox. ${months} meses restantes`:'defina uma reserva mensal'}</small><div class="goal-actions"><button class="btn btn-light" onclick="goals[${i}].saved=Math.min(goals[${i}].value,+(prompt('Quanto você já tem para esta meta?',goals[${i}].saved)||goals[${i}].saved));localStorage.setItem('canivete_goals',JSON.stringify(goals));renderGoals()">Atualizar</button><button class="btn" style="background:#fee2e2;color:#b91c1c" onclick="goals.splice(${i},1);localStorage.setItem('canivete_goals',JSON.stringify(goals));renderGoals()">Excluir</button></div></div>`}).join('')}
+document.getElementById('income').oninput=calc;document.getElementById('save').oninput=calc;renderExpenses();renderGoals();
+</script>
+</body></html>
